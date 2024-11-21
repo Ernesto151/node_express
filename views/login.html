@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/public/login.css">
+ 
+</head>
+<body>
+    <div class="cont-login">
+        <h2>Iniciar Sesión</h2>
+
+        <form action="/login" method="post" id="loginForm" onsubmit="return false;">
+            <div class="input-groupLogin">
+                <label for="usernameLogin">Usuario</label>
+                <input type="text" id="usernameLogin" name="usernameLogin" required>
+            </div>
+            <div class="input-groupLogin">
+                <label for="passwordLogin">Contraseña</label>
+                <input type="password" id="passwordLogin" name="passwordLogin" required>
+            </div>
+            <button type="submit" class="btnLogin">Ingresar</button>
+        </form>
+        <p class="register-text">
+            ¿No tienes una cuenta? 
+            <a href="/registrar">Regístrate aquí</a>
+        </p>
+    </div>
+
+    
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <p>Usuario o contraseña incorrectos</p>
+            <button class="close-modal" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+
+        function mostrarModal() {
+            document.getElementById("errorModal").style.display = "flex";
+        }
+
+        
+        function cerrarModal() {
+            document.getElementById("errorModal").style.display = "none";
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); 
+
+            const usernameLogin = document.getElementById("usernameLogin").value;
+            const passwordLogin = document.getElementById("passwordLogin").value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usernameLogin, passwordLogin })
+                });
+
+                const result = await response.json();
+                console.log(result);
+                
+                if (result.success) {
+                    
+                    window.location.href = result.redirect;
+                } else {
+                    
+                    mostrarModal();
+                }
+            } catch (error) {
+                console.error("Error en la autenticación:", error);
+                mostrarModal();
+            }
+        });
+    </script>
+</body>
+</html>

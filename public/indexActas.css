@@ -1,0 +1,95 @@
+body{
+    width: 100vw;
+    height: 100vh; 
+    overflow-x:hidden; 
+  }
+  
+  textarea{
+      width: 96%;
+      font-size: 20px;
+  }
+  
+  label{
+      font-size: 25px;
+  }
+  
+  input{
+      font-size: 20px;
+      border: none;
+      outline: none;
+  }
+
+.btn-pdfActa{
+    margin-top: 20px;
+    margin-bottom: 7px;
+    padding: 2px;
+    font-size: 15px;
+    margin-left:20px ;
+}
+
+.btn-crearActa{
+    border: 1px solid black;
+    border-radius: 2px ;
+    margin-top: 20px;
+    margin-bottom: 7px;
+    padding: 2px;
+    font-size: 15px;      
+}
+
+.cont-formAct{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 30px;
+    margin-top: 50px;
+}
+
+.encabezadoAct{
+    font-size: 40px;
+}
+
+.inputAct{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.cont-fecha-hora{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.cont-horaAct{
+    margin-left: 400px;
+    position: absolute;
+}
+
+.cont-descripcionAct{
+    display: flex;
+    flex-direction: column;
+}
+
+.cont-problemasAct{
+    display: flex;
+    flex-direction: column;
+}
+
+
+#etapaAct{
+    width: 50%;    
+}
+
+#objetivoAct{
+    width: 88%;
+}
+
+#inspectorAct{
+    width: 30%;
+}
+
+#cargoAct{
+    width: 30%;
+    margin-bottom: 15px;
+}

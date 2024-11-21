@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <title>permisos</title>
+       <meta charset="UTF-8">
+       <link rel="stylesheet" type="text/css" href="/public/permisos.css">
+    </head>
+
+    <body>
+        <div class="cont-permisos">
+            <h2>Asignar Permiso</h2>
+            <form action="/permisos/asignar" method="POST">
+                <div class="input-groupPermisos">
+                    <label for="nombre_usuario">Nombre de Usuario:</label>
+                    <input type="text" id="nombre_usuario" name="nombre_usuario" required>
+                </div>
+                
+                <div class="input-groupPermisos">
+                    <label for="nombre_documento">Nombre del Documento:</label>
+                    <input type="text" id="nombre_documento" name="nombre_documento" required>
+                </div>
+        
+                <div class="input-groupPermisos">
+                    <label for="tipo_documento">Tipo de Documento:</label>
+                    <select id="tipo_documento" name="tipo_documento" required>
+                        <option value="acta">Acta</option>
+                        <option value="expediente">Expediente</option>
+                    </select>
+                </div>
+        
+                <button type="submit" class="btnPermisos">Asignar Permiso</button>
+            </form>
+        </div>
+        
+    </body>
+</html>

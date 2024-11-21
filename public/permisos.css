@@ -1,0 +1,68 @@
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f2f2f2;
+}
+
+/* Contenedor del formulario de otorgar permisos */
+.cont-permisos {
+    background-color: #ffffff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.cont-permisos h2 {
+    margin-bottom: 1em;
+    color: #333333;
+}
+
+.input-groupPermisos {
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+.input-groupPermisos label {
+    display: block;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 0.5em;
+}
+
+.input-groupPermisos input,
+.input-groupPermisos select {
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+/* Botón de asignar permisos */
+.btnPermisos {
+    width: 100%;
+    padding: 0.8em;
+    background-color: #f33c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btnPermisos:hover {
+    background-color: #f03a3a;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/public/listaExp.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+    <title>Mostrar Expedientes</title>
+
+</head>
+<body>
+
+    <div id="doc-guardadosExp-cont">
+
+    <h1 class="encabezado-list-Exp">Documentos Guardados</h1>
+
+    <div id="docGuardadosExp-input">
+        <input type="text" id="nombreDocumentoExp">
+        <button id="cargarDatosBtnExp">Buscar</button>
+        <button id="fetch-nombresExp">Todos</button>
+    </div>
+
+    <table id="expedientes-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Facultad</th>
+                <th>Fecha</th>
+                <th>Acciones</th> 
+            </tr>
+        </thead>
+        <tbody id="nombres-listExp"></tbody>
+    </table>
+
+    </div>
+
+    <script type="text/javascript" src="/public/pdfDetallesExp.js"></script>
+    <script type="text/javascript" src="/public/listaExp.js"></script>
+    
+   </body>
+</html>

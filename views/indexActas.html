@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>actas</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/public/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/public/indexActas.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+</head>
+
+<body>
+    <h1 class="encabezadoAct">Informe sobre el control de actas realizada por la Secretaría General a la</h1>
+    
+    <form action="/actas" class="cont-formAct" method="post" onsubmit="return validateForm(event)">
+        <div class="cont-fac">
+            <label for="facultadAct" id="lfacultadAct">Facultad:</label>
+            <input type="text" id="facultadAct" name="facultadAct">
+            <span class="error-message" id="error-facultadAct"></span>
+        </div>
+
+        <div class="cont-fecha-hora inputAct">
+            <div class="cont-fechaAct">
+                <label for="fechaAct" id="lfechaAct">Fecha:</label>
+                <input type="date" id="fechaAct" name="fechaAct" required="">
+            </div>
+
+            <div class="cont-horaAct">
+                <label for="horaAct" id="lhoraAct">Hora:</label>
+                <input type="time" id="horaAct" name="horaAct" required="">
+            </div>
+        </div>
+
+        <div class="cont-etapaAct inputAct">
+            <label for="etapaAct" id="letapaAct">Etapa que se controla:</label>
+            <input type="text" id="etapaAct" name="etapaAct" required="">
+            <span class="error-message" id="error-etapaAct"></span>
+        </div>
+
+        <div class="cont-objAct inputAct">
+            <label for="objetivoAct" id="lobjetivoAct">Objetivo:</label>
+            <input type="text" id="objetivoAct" name="objetivoAct" required="">
+            <span class="error-message" id="error-objetivoAct"></span>
+        </div> 
+
+        <div class="cont-descripcionAct inputAct">
+            <label for="descripcionAct" id="ldescripcionAct">Descripción:</label>
+            <textarea id="descripcionAct" name="descripcionAct" required=""></textarea>
+            <span class="error-message" id="error-descripcionAct"></span>
+        </div>
+
+        <div class="cont-problemasAct inputAct">
+            <label for="problemasAct" id="lproblemasAct">Principales problemas detectados:</label>
+            <textarea id="problemasAct" name="problemasAct" required=""></textarea>
+            <span class="error-message" id="error-problemasAct"></span>
+        </div>
+
+        <div class="cont-inspectorAct inputAct">
+            <label for="inspectorAct" id="linspectorAct">Inspector:</label>
+            <input type="text" id="inspectorAct" name="inspectorAct" required="">
+            <span class="error-message" id="error-inspectorAct"></span>
+        </div>
+
+        <div class="cont-cargoAct inputAct">
+            <label for="cargoAct" id="lcargAct">Cargo:</label>
+            <input type="text" id="cargoAct" name="cargoAct" required="">
+            <span class="error-message" id="error-cargoAct"></span>
+        </div>
+
+        <div class="cont-nombredoc-Act inputAct">
+            <label for="nombredoc" id="lnombredoc">Nombre del documento:</label>
+            <input name="nombredoc" id="nombredoc" type="text" method="post" required="">
+            <span class="error-message" id="error-nombredoc"></span>
+        </div>
+
+        <div>
+        <input type="submit" class="btn-crearActa" value="Guardar">
+        <button type="button" class="btn-pdfActa" onclick="pdfexport()">Export PDF</button>
+        </div>
+    </form>
+
+    <script type="text/javascript" src="/public/pdfActas.js"></script>
+    <script>
+        function validateForm(event) {
+            let isValid = true;
+
+            // Validación de campos de texto solo con letras
+            const textInputs = ['facultadAct', 'etapaAct', 'objetivoAct', 'inspectorAct', 'cargoAct', 'nombredoc'];
+            textInputs.forEach(id => {
+                const input = document.getElementById(id);
+                const error = document.getElementById(`error-${id}`);
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(input.value)) {
+                    error.textContent = "Solo se admiten letras";
+                    isValid = false;
+                } else {
+                    error.textContent = "";
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Detiene el envío del formulario si hay errores
+                alert("Por favor corrige los errores antes de enviar el formulario.");
+            }
+
+        }
+        
+    </script>
+</body>
+</html>

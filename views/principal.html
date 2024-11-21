@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/public/principal.css">
+    <title>Principal</title>
+ 
+<body>
+    <h1>Control de Actas y Expedientes</h1>
+    
+    <div class="cont-opciones">
+        <div class="options">
+            <button id="btn-crearAct" onclick="showSubOptions('crear')">Crear Documento</button>
+            <button id="btn-guardados" onclick="showSubOptions('guardados')">Documentos Guardados</button>
+        </div>
+        
+        <div class="sub-options" id="sub-options" style="display: none;">
+            <button class="sub-btn" id="actas-btn">Actas</button>
+            <button class="sub-btn" id="expedientes-btn">Expedientes</button>
+        </div>
+    </div>
+
+    <button id="btn-notificaciones" onclick="toggleSidebar()">Notificaciones</button>
+    <button id="btn-permisos" onclick="irAPermisos()" class="permisos-btn">Permisos</button>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+        <h2>Notificaciones</h2>
+
+        <button onclick="limpiarNotificaciones()">Limpiar</button> 
+
+        <div id="notification-list">
+        
+            <% if (notificaciones && notificaciones.length > 0) { %>
+                <% notificaciones.forEach(notificacion => { %>
+                    <div class="notification">
+                        <p><strong><%= notificacion.fecha %></strong>: <%= notificacion.mensaje %></p>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="notification">No hay notificaciones nuevas</div>
+            <% } %>
+        </div>
+    </div>
+    
+    <script>
+        let action = '';
+        
+        let btnCrearAct= document.getElementById('btn-crearAct');
+        btnCrearAct.addEventListener("click",function(){
+            btnGuardados.style.color='black';
+            btnCrearAct.style.color='red';
+        });
+
+        let btnGuardados= document.getElementById('btn-guardados');
+        btnGuardados.addEventListener("click",function(){
+            btnCrearAct.style.color='black';
+            btnGuardados.style.color='red';
+        });
+
+        function showSubOptions(selectedAction) {
+            action = selectedAction;
+            document.getElementById('sub-options').style.display = 'block';
+
+            document.getElementById('actas-btn').onclick = function() {
+                if (action === 'crear') {
+                    window.location.href = '/actas';
+                } else if (action === 'guardados') {
+                    window.location.href = '/listaAct';
+                }
+            };
+
+            document.getElementById('expedientes-btn').onclick = function() {
+                if (action === 'crear') {
+                    window.location.href = '/expedientes';
+                } else if (action === 'guardados') {
+                    window.location.href = '/listaExp';
+                }
+            };
+        }
+
+        // Función para mostrar/ocultar la barra lateral de notificaciones
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.width = sidebar.style.width === '250px' ? '0' : '250px';
+        }
+
+        function limpiarNotificaciones() {
+    fetch('/notificaciones/limpiar', { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                // Si la eliminación fue exitosa, actualiza el HTML para mostrar que no hay notificaciones
+                document.getElementById('notification-list').innerHTML = 
+                    '<div class="notification">No hay notificaciones nuevas</div>';
+            } else {
+                console.error('Error al borrar notificaciones');
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud de borrado de notificaciones:', error);
+        });
+}
+
+function irAPermisos() {
+            window.location.href = '/permisos'; // Cambia esto a la ruta que necesites
+        }
+
+    </script>
+</body>
+</html>

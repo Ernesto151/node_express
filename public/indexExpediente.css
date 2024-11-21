@@ -1,0 +1,170 @@
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.cont-formExp{
+    width: 100%;
+    height: 100%;
+    margin-left: 30px;
+}
+
+.encabezadoExp{
+    text-align: center;
+    font-size: 40px;
+    padding-bottom: 30px;
+}
+
+.input-enc{
+    margin-top: 30px;
+}
+
+.inputExp{
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.ici-cd{
+    margin-top: 30px;
+    font-size: 25px;
+    text-decoration-line: underline;
+}
+
+.asp-señalados{
+    margin-top: 20px;
+    font-size: 25px;
+}
+
+.cont-val-cuantitativa{
+    margin-top: 30px;
+    font-size: 20px;
+    width: 50%;
+}
+
+.cont-tabla{
+    border: 1px solid black;
+}
+
+ .input-tabla{
+    width: 100%;
+}
+
+.nota-final{
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+.cont-firmas{
+    width: 96%;
+    height: 24%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    /* border: 1px solid red; */
+}
+
+.items-firmas{
+    width: 500px;
+    /* border: 1px solid red; */
+}
+
+.firma-sec-docente{
+    position: absolute;
+    align-self: flex-end;
+    margin-left: 400px;
+    padding-bottom: 40px;
+}
+
+#objetivoExp{
+    border-bottom: 1px solid black;
+    width: 9%;
+}
+
+#clasif-aspectos{
+    width: 50%;
+}
+
+#inspectora{
+    border-bottom: 1px solid black;
+    width: 85%;
+    
+}
+
+#sec-general{
+    border-bottom: 1px solid black;
+    width: 85%;
+    
+}
+
+#sec-docente{
+    border-bottom: 1px solid black;
+    width: 85%;
+    
+}
+
+#previewInspectora{
+    display:none;
+    width: 110px;
+    height: auto;
+    margin-top: 10px;
+}
+
+#previewSecGeneral{
+    display:none; 
+    width: 110px; 
+    height: auto; 
+    margin-top: 10px;
+}
+
+#previewSecDocente{
+    display:none; 
+    width: 110px; 
+    height: auto; 
+    margin-top: 10px;
+}
+
+th{
+    border: 1px solid black;
+}
+
+td{
+    border: 1px solid black;
+}
+
+textarea{
+    width: 96%;
+    font-size: 20px;
+}
+
+label{
+    font-size: 25px;
+}
+
+input{
+    font-size: 20px;
+    border: none;
+    outline: none;
+}
+
+.btn-crearExp{
+    border: 1px solid black;
+    border-radius: 2px ;
+    margin-top: 20px;
+    margin-bottom: 7px;
+    padding: 2px;
+    font-size: 15px; 
+}
+
+.btn-pdfExp{
+    margin-top: 20px;
+    margin-bottom: 7px;
+    padding: 2px;
+    font-size: 15px;
+    margin-left:20px ;
+}

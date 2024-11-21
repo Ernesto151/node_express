@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <link rel="stylesheet" type="text/css" href="/public/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/public/listaAct.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+    <title>Mostrar Actas</title>
+ 
+</head>
+<body>
+
+    <div id="doGuradados-cont">
+        <h1 class="encabezado-list">Documentos Guardados</h1>
+      
+          <div id="docGuardados-input">
+              <input type="text" id="nombreDocumento">
+              <button id="cargarDatosBtn">Buscar</button>
+              <button id="fetch-nombres">Todos</button>
+          </div>
+      
+          <table id="actas-table">
+              <thead>
+                  <tr>
+                      <th>Nombre</th>
+                      <th>Facultad</th>
+                      <th>Fecha</th>
+                      <th>Acciones</th> 
+                  </tr>
+              </thead>
+              <tbody id="nombres-list"></tbody>
+          </table>
+      
+      </div>
+
+    <script type="text/javaScript" src="/public/pdfDetallesActas.js"></script>
+    <script type="text/javaScript" src="/public/listaAct.js"></script>
+
+</body>
+</html>

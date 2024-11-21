@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>expedientes</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="/public/normalize.css">
+        <link rel="stylesheet"  type="text/css" href="/public/indexExpediente.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+    </head>
+
+    <body>
+
+         <h1 class="encabezadoExp">
+                    Registro y Control de las Inspecciones realizadas por la Secretaría General según la Resolución Ministerial 
+                    119/21 capítulo XIV.
+                </h1>
+        
+            <form action="/expedientes" class="cont-formExp" method="post" onsubmit="return validateFormExp(event)">
+        
+                <div>
+                    <label for="nombreDoc">Nombre del documento:</label>
+                    <input type="text" id="nombreDoc" name="nombreDoc">
+                    <span id="error-nombreDoc" class="error-message"></span>
+                </div>
+                
+                <div class="inputExp-fac input-enc">
+                    <label for="facultadExp">Facultad:</label>
+                    <input type="text" id="facultadExp" name="facultadExp">
+                    <span id="error-facultadExp" class="error-message"></span>
+                </div>
+        
+                <div class="cont-curso input-enc">
+                    <label for="curso">Curso:</label>
+                    <input type="number" id="curso" name="curso">
+                    <span id="error-curso" class="error-message"></span>
+                </div>
+        
+                <div class="cont-t-curso input-enc">
+                    <label for="tipoCurso">Tipo de Curso:</label>
+                    <input type="text" id="tipoCurso" name="tipoCurso">
+                    <span id="error-tipoCurso" class="error-message"></span>
+                </div>
+        
+                <div class="cont-carrera input-enc">
+                    <label for="carrera">Carrera:</label>
+                    <input type="text" id="carrera" name="carrera">
+                    <span id="error-carrera" class="error-message"></span>
+                </div>
+        
+                <div class="cont-fechaExp input-enc">
+                    <label for="fechaExp">Fecha:</label>
+                    <input type="date" id="fechaExp" name="fechaExp">
+                    <span id="error-fechaExp" class="error-message"></span>
+                </div>
+        
+                <div class="cont-participantes inputExp">
+                    <label for="participantes">Participantes:</label>
+                    <textarea id="participantes" name="participantes"></textarea>
+                    <span id="error-participantes" class="error-message"></span>
+                </div>
+        
+                <div class="cont-objetivoExp inputExp">
+                    <label for="objetivoExp">Objetivo: Revisar expedientes de <input type="text" id="objetivoExp" name="objetivoExp"> año.</label>
+                    <span id="error-objetivoExp" class="error-message"></span>
+                </div>
+        
+                <h3 class="ici-cd">ICI CD</h3>
+                <h3 class="asp-señalados">Aspectos señalados:</h3>
+                
+                <div class="cont-general inputExp">
+                    <label for="general"><b>I. General:</b></label>
+                    <textarea name="general" id="general"></textarea>
+                    <span id="error-general" class="error-message"></span>
+                </div>
+        
+                <div class="cont-h-matricula inputExp">
+                    <label for="h_matricula">Hoja de matrícula:</label>
+                    <textarea name="h_matricula" id="h_matricula"></textarea>
+                    <span id="error-h_matricula" class="error-message"></span>
+                </div>
+        
+                <div class="cont-titulos inputExp">
+                    <label for="titulos">Títulos de enseñanza precedente:</label>
+                    <textarea name="titulos" id="titulos"></textarea>
+                    <span id="error-titulos" class="error-message"></span>
+                </div>
+        
+                <div class="cont-s-militar inputExp">
+                    <label for="s_militar">Documentación del servicio militar:</label>
+                    <textarea name="s_militar" id="s_militar"></textarea>
+                    <span id="error-s_militar" class="error-message"></span>
+                </div>
+        
+                <div class="cont-ev-integradas inputExp">
+                    <label for="ev_integradas">Evaluaciones Integradas:</label>
+                    <textarea name="ev_integradas" id="ev_integradas"></textarea>
+                    <span id="error-ev_integradas" class="error-message"></span>
+                </div>
+        
+                <div class="cont-h-resultado inputExp">
+                    <label for="h_resultado">Hojas de resultados:</label>
+                    <textarea name="h_resultado" id="h_resultado"></textarea>
+                    <span id="error-h_resultado" class="error-message"></span>
+                </div>
+        
+                <div class="cont-convalidaciones inputExp">
+                    <label for="convalidaciones">Convalidaciones:</label>
+                    <textarea name="convalidaciones" id="convalidaciones"></textarea>
+                    <span id="error-convalidaciones" class="error-message"></span>
+                </div>
+        
+                <div class="cont-r-matricula inputExp">
+                    <label for="r_matricula">Ratificación de matrícula:</label>
+                    <textarea name="r_matricula" id="r_matricula"></textarea>
+                    <span id="error-r_matricula" class="error-message"></span>
+                </div>
+        
+                <div class="cont-reingresos inputExp">
+                    <label for="reingresos">Reingresos:</label>
+                    <textarea name="reingresos" id="reingresos"></textarea>
+                    <span id="error-reingresos" class="error-message"></span>
+                </div>
+        
+                <div class="cont-licencia inputExp">
+                    <label for="licencia">Alta de licencia de matrícula:</label>
+                    <textarea name="licencia" id="licencia"></textarea>
+                    <span id="error-licencia" class="error-message"></span>
+                </div>
+        
+                <div class="cont-ingles inputExp">
+                    <label for="ingles">Requisito de Inglés:</label>
+                    <textarea name="ingles" id="ingles"></textarea>
+                    <span id="error-ingles" class="error-message"></span>
+                </div>
+        
+                <div class="cont-otra inputExp">
+                    <label for="otra">Otra:</label>
+                    <textarea name="otra" id="otra"></textarea>
+                    <span id="error-otra" class="error-message"></span>
+                </div>
+        
+                <div class="cont-indicaciones inputExp">
+                    <label for="indicaciones"><b>II. Indicaciones o acciones a cumplir para erradicar señalamiento</b></label>
+                    <textarea name="indicaciones" id="indicaciones"></textarea>
+                    <span id="error-indicaciones" class="error-message"></span>
+                </div>
+        
+                <div class="cont-observaciones inputExp">
+                    <label for="observaciones"><b>III. Observaciones o Recomendaciones</b></label>
+                    <textarea name="observaciones" id="observaciones"></textarea>
+                    <span id="error-observaciones" class="error-message"></span>
+                </div>
+        
+                <div class="cont-clasificacion-aspectos inputExp">
+                    <label for="clasif_aspectos"><b>IV. Clasificación de los aspectos detectados(Fraudes, Violaciones, Infracciones, Señalamientos)</b></label>
+                    <input type="text" id="clasif_aspectos" name="clasif_aspectos"><br>
+                    <span id="error-clasif_aspectos" class="error-message"></span>
+                </div>
+        
+                <div class="cont-val-cualitativa inputExp">
+                    <label for="val_cualitativa"><b>V. Valoración Cualitativa:</b></label>
+                    <textarea name="val_cualitativa" id="val_cualitativa"></textarea>
+                    <span id="error-val_cualitativa" class="error-message"></span>
+                </div>
+        
+                <div class="cont-plan-docente inputExp">
+                    <label for="plan_docente"><b>VI. Cumplimiento del plan del proceso docente</b></label>
+                    <textarea name="plan_docente" id="plan_docente"></textarea>
+                    <span id="error-plan_docente" class="error-message"></span>
+                </div>
+
+        <div class="cont-val-cuantitativa">
+            <label for=""><b>VII. Valoración cuantitativa</b></label>
+            <table class="cont-tabla">
+                <tr class="cont-tabla-tr">
+                    <th>Facultad</th>
+                    <th>Cifras matrícula inicial</th>
+                    <th># Expedientes revisados</th>
+                    <th>Infracciones</th>
+                    <th>Señalamientos</th>
+                    <th>Observaciones</th>
+                </tr>
+
+                <tr>
+                    <td>
+                    <input type="text" id="num_facultad" name="num_facultad" class="input-tabla">
+                    <span id="error-num_facultad" class="error-message"></span>
+                     </td>
+                    <td>
+                    <input type="number" id="cif_mat_ini" name="cif_mat_ini" class="input-tabla">
+                    <span id="error-cif_mat_ini" class="error-message"></span>
+                     </td>
+                    <td>
+                    <input type="number" id="exp_revisados" name="exp_revisados" class="input-tabla">
+                    <span id="error-exp_revisados" class="error-message"></span>
+                     </td>
+                    <td>
+                    <input type="number" id="num_infracciones" name="num_infracciones" class="input-tabla">
+                    <span id="error-num_infracciones" class="error-message"></span>
+                     </td>
+                    <td>
+                    <input type="number" id="num_señalamientos" name="num_señalamientos" class="input-tabla">
+                    <span id="error-num_señalamientos" class="error-message"></span>
+                     </td>
+                    <td>
+                    <input type="number" id="num_observaciones" name="num_observaciones" class="input-tabla">
+                    <span id="error-num_observaciones" class="error-message"></span>
+                     </td>
+                </tr>
+            </table>
+        </div>
+
+        <p class="nota-final">Para que así conste firman la presente,</p>
+
+        <div class="cont-firmas ">
+            <div class="items-firmas firma-inspectora">
+            <label for="inspectora">Inspectora Sec. General</label>
+            <input type="file" id="inspectora" accept="image/*" onchange="previewImage('inspectora', 'previewInspectora')" />
+            <img id="previewInspectora" alt="Vista previa firma inspectora" />
+            </div>
+
+            <div class="items-firmas firma-sec-general">
+            <label for="sec-general">Secretaria General</label>
+            <input type="file" id="sec-general" accept="image/*" onchange="previewImage('sec-general', 'previewSecGeneral')" />
+            <img id="previewSecGeneral" alt="Vista previa firma secretaria general" />
+            </div>
+
+            <div class="items-firmas firma-sec-docente">
+            <label for="sec-docente">Secretaria Docente</label>
+            <input type="file" id="sec-docente" accept="image/*" onchange="previewImage('sec-docente', 'previewSecDocente')" />
+            <img id="previewSecDocente" alt="Vista previa firma secretaria docente" />
+            </div>
+
+        </div>
+
+        <div>
+        <input type="submit" class="btn-crearExp" value="Guardar">
+        <button type="button" class="btn-pdfExp" onclick="pdfexportExp()">Export PDF</button>
+        </div>
+    </form>
+
+    <script>
+        function validateFormExp(event) {
+            let isValid = true;
+
+            const textInputs = [ 'nombreDoc','facultadExp','tipoCurso','carrera','participantes', 'objetivoExp', 
+                                 'general','h_matricula','titulos', 's_militar','ev_integradas','h_resultado','convalidaciones','r_matricula','reingresos',
+                                 'licencia','ingles','otra','indicaciones','observaciones','clasif_aspectos','val_cualitativa','plan_docente','num_facultad',
+     ];
+            textInputs.forEach(id => {
+                const input = document.getElementById(id);
+                const error = document.getElementById(`error-${id}`);
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(input.value)) {
+                    error.textContent = "Solo se admiten letras";
+                    isValid = false;
+                } else {
+                    error.textContent = "";
+                }
+            });
+
+            const numberInputs = [ 'curso','cif_mat_ini','exp_revisados','num_infracciones','num_señalamientos','num_observaciones']; 
+            numberInputs.forEach(id => {
+                const input = document.getElementById(id);
+                const error = document.getElementById(`error-${id}`);
+                if (!/^\d+$/.test(input.value)) {
+                    error.textContent = "Solo se permiten números";
+                    isValid = false;
+                } else {
+                    error.textContent = "";
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Detiene el envío del formulario si hay errores
+                alert("Por favor corrige los errores antes de enviar el formulario.");
+            }
+
+        }
+    </script>
+
+    <script type="text/javascript" src="/public/pdfExp.js"></script>
+    </body>
+</html>

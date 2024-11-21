@@ -1,0 +1,113 @@
+body{
+    width: 100vw;
+    /* height: ; */
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    font-size: 30px;
+}
+
+
+.input{
+    font-size: 20px;
+    border: none;
+    outline: none;
+}
+
+.encabezado-list{
+    width: 40%;
+    margin: auto;
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+#doGuradados-cont{
+    width: 100%;
+    margin: auto;
+}
+
+#docGuardados-input{
+    width: 38%;
+    margin: auto;
+}
+
+#docGuardados-list{
+    width: 100%;
+    margin: auto;
+    margin-top: 25px;
+}
+
+#actas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    text-align: center;
+}
+
+#actas-table th, #actas-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+#actas-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#actas-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#actas-table tr:hover {
+    background-color: #ddd;
+}
+
+.btn-cerrarDetalles{
+    width: 70px;
+    margin-top:20px;
+    margin-right: 50px;
+    padding: 2px;
+}
+
+.btn-pdfDetalles{
+    width: 100px;
+    margin-top:20px ;
+    padding: 2px;
+}
+
+.btn-cerrarEditar{
+    width: 70px;
+    margin-top:20px;
+    margin-right: 50px;
+    padding: 2px;
+}
+
+.btn-pdfEditar{
+    width: 70px;
+    margin-top:20px;
+    padding: 2px;
+}
+
+.btnList {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btnList:hover {
+    background-color: #45a049;
+}
+
+.btnList:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

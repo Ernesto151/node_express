@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/registrar.css">
+    <title>Registro</title>
+</head>
+<body>
+    <div class="cont-registrar">
+        <h2>Registro</h2>
+        <form action="/registrar" method="post" >
+            <div class="input-groupRegistrar">
+                <label for="usernameRegistrar">Usuario</label>
+                <input type="text" id="usernameRegistrar" name="usernameRegistrar" required>
+                <small id="usernameError" class="error-message"></small>
+            </div>
+            <div class="input-groupRegistrar">
+                <label for="passwordRegistrar">Contraseña</label>
+                <input type="password" id="passwordRegistrar" name="passwordRegistrar" required>
+                <small id="passwordError" class="error-message"></small>
+            </div>
+            <div class="input-groupRegistrar">
+                <label for="rolRegistrar">Rol</label>
+                <input type="text" id="rolRegistrar" name="rolRegistrar" required>
+                <small id="rolError" class="error-message"></small>
+            </div>
+            <input type="submit" class="btnRegistrar" value="Registrarse">
+        </form>
+        <p class="login-text">
+            ¿Ya tienes una cuenta? 
+            <a href="/">Inicia sesión aquí</a>
+        </p>
+    </div>
+
+    <script>
+           function validarRegistro() {
+            const username = document.getElementById("usernameRegistrar").value;
+            const password = document.getElementById("passwordRegistrar").value;
+            const rol = document.getElementById("rolRegistrar").value;
+            const usernameError = document.getElementById("usernameError");
+            const passwordError = document.getElementById("passwordError");
+            const rolError = document.getElementById("rolError");
+
+            let isValid = true;
+            usernameError.textContent = "";
+            passwordError.textContent = "";
+            rolError.textContent= "";
+
+            if (!/^[a-zA-Z]+$/.test(username)) {
+                usernameError.textContent = "El nombre de usuario solo debe contener letras.";
+                isValid = false;
+                
+            }
+
+            if (password.length < 8) {
+                passwordError.textContent = "La contraseña debe poseer al menos 8 caracteres.";
+                isValid = false;
+            }
+
+            if (!/^[a-zA-Z]+$/.test(rol)) {
+                usernameError.textContent = "El tipo de rol solo debe contener letras.";
+                isValid = false;
+                
+            }
+            return isValid;
+        }
+
+        // Función para registrar el usuario
+        async function registrarUsuario(event) {
+            event.preventDefault(); // Evita el envío del formulario
+
+            // Primero valida el formulario
+            if (!validarRegistro()) {
+                return;
+            }
+
+            const data = {
+                usernameRegistrar: document.getElementById("usernameRegistrar").value,
+                passwordRegistrar: document.getElementById("passwordRegistrar").value,
+                rolRegistrar: document.getElementById("rolRegistrar").value
+            };
+
+            const response = await fetch("/registrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.status === 409) {
+                const result = await response.json();
+                alert(result.mensaje); 
+            } else if (response.ok) {
+                alert("Usuario registrado correctamente.");
+                // Opcional: redirigir al usuario o limpiar el formulario
+            } else {
+                alert("Error al registrar el usuario.");
+            }
+        }
+
+        // Añadir evento al formulario
+        document.getElementById("registroForm").addEventListener("submit", registrarUsuario);
+
+    </script>
+</body>
+</html>
