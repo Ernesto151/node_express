@@ -18,5 +18,8 @@
     "express-session": "^1.18.1",
     "mjs": "^1.0.0",
     "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.10"
   }
 }
