@@ -9,6 +9,7 @@ import expRoutes from './routes/exp.routes.js';
 import registroRoutes from './routes/registrar.routes.js';
 import loginRoutes from './routes/login.routes.js';
 import permisosRoutes from './routes/permisos.routes.js'
+import { pool } from "./db.js";
 
 const app= express();
 config();

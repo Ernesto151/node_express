@@ -1,15 +1,19 @@
 import pg from 'pg';
 import {config} from 'dotenv';
 
-
 config();
 
-export const pool = new pg.Pool({
+export const pool= new pg.Pool({
+    // user:"postgres",
+    // host:"localhost",
+    // password:"12345",
+    // database:"datos",
+    // port:"5432",
     connectionString: process.env.DATABASE_URL,
     ssl: {
-      rejectUnauthorized: false,
-    },
-  });
+        rejectUnauthorized: false,
+      }
+});
 
 // pool.query(`
 // CREATE TABLE Permisos (
