@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {config} from 'dotenv';
 import ejs from 'ejs';
 import session from 'express-session';
 import actasRoutes from './routes/actas.routes.js';
@@ -10,6 +11,7 @@ import loginRoutes from './routes/login.routes.js';
 import permisosRoutes from './routes/permisos.routes.js'
 
 const app= express();
+config();
 
 app.use(session({
     secret: 'RwjigFBR.1122', 
