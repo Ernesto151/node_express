@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { db } from "../db.js"; 
+import { pool } from "../db.js"; 
 import { asignarPermiso, verificarAdmin } from "../controllers/permisos.controllers.js";
 
 const router= Router();

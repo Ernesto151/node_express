@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../db.js"; 
+import { pool } from "../db.js"; 
 import { crearExp, editarExp, eliminarExp, listarExp, mostrarExp, verificarAdminExp } from "../controllers/exp.controllers.js";
 
 const router= Router();
@@ -20,17 +20,19 @@ router.delete("/expedientes/:id", eliminarExp);
 router.put("/expedientes/:id", editarExp);
 
 //notificaciones
-router.get('/principal', (req, res) => {
+router.get('/principal', async (req, res) => {
     const query = `SELECT fecha, mensaje FROM Notificaciones ORDER BY fecha DESC`;
 
-    db.all(query, [], (err, notificaciones) => {
-        if (err) {
-            console.error('Error al obtener notificaciones:', err.message);
-            res.status(500).send('Error al cargar la página principal.');
-        } else {
-            res.render('principal', { notificaciones }); // Pasa las notificaciones a la vista
-        }
+    try{
+    const result = await pool.query(query, []);
+    const notificacionesExp = result.rows;
+
+    res.render('principal', { notificacionesExp }); // Pasa las notificaciones a la vista
+}catch(err){
+    console.error('Error al obtener notificaciones:', err.message);
+    res.status(500).send('Error al cargar la página principal.');
+}
     });
-});
+
 
 export default router;

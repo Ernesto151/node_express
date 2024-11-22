@@ -252,7 +252,7 @@
             textInputs.forEach(id => {
                 const input = document.getElementById(id);
                 const error = document.getElementById(`error-${id}`);
-                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(input.value)) {
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,:;'"]+$/.test(input.value)) {
                     error.textContent = "Solo se admiten letras";
                     isValid = false;
                 } else {

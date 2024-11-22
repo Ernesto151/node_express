@@ -1,4 +1,4 @@
-import { db } from "../db.js";
+import { pool } from "../db.js";
 
 export const verificarAdmin= function (req, res, next) {
     if (req.session.rol === 'admin') {
@@ -8,42 +8,58 @@ export const verificarAdmin= function (req, res, next) {
     }
 }
 
-export const asignarPermiso= function (req, res){
+export const asignarPermiso = async (req, res) => {
     const { nombre_usuario, nombre_documento, tipo_documento } = req.body;
 
-    // obtener el ID del usuario a partir del nombre de usuario
-    const usuarioQuery = `SELECT id FROM Usuarios WHERE usuario = ?`;
+    try {
+        // Obtener el ID del usuario
+        const usuarioQuery = `SELECT id FROM Usuarios WHERE usuario = $1`;
+        const usuarioResult = await pool.query(usuarioQuery, [nombre_usuario]);
 
-    db.get(usuarioQuery, [nombre_usuario], (err, usuario) => {
-        if (err || !usuario) {
-            console.error('Error al obtener ID de usuario:', err?.message || 'Usuario no encontrado');
-            return res.status(500).send('Error al obtener usuario.');
+        if (usuarioResult.rows.length === 0) {
+            console.error('Usuario no encontrado');
+            return res.status(404).send('Usuario no encontrado.');
         }
 
-        // Seleccion de la tabla de documentos según el tipo de documento
-        const documentoTabla = tipo_documento === 'acta' ? 'DocumentosActas' : 'DocumentosExp';
-        const documentoQuery = `SELECT id FROM ${documentoTabla} WHERE nombre = ?`;
-        
-        //obtener el ID del documento a partir del nombre del documento
-        db.get(documentoQuery, [nombre_documento], (err, documento) => {
-            if (err || !documento) {
-                console.error('Error al obtener ID del documento:', err?.message || 'Documento no encontrado');
-                return res.status(500).send('Error al obtener documento.');
-            }
+        const usuarioId = usuarioResult.rows[0].id;
 
-            // Insertar en la tabla Permisos con los IDs obtenidos
-            const permisoQuery = `
-                INSERT INTO Permisos (usuario_id, documento_id, tipo_documento)
-                VALUES (?, ?, ?)
+        // Obtener el ID del documento según el tipo
+        const documentoTabla = tipo_documento === 'acta' ? 'DocumentosActas' : 'DocumentosExp';
+        const documentoQuery = `SELECT id FROM ${documentoTabla} WHERE nombre = $1`;
+        const documentoResult = await pool.query(documentoQuery, [nombre_documento]);
+
+        if (documentoResult.rows.length === 0) {
+            console.error('Documento no encontrado');
+            return res.status(404).send('Documento no encontrado.');
+        }
+
+        const documentoId = documentoResult.rows[0].id;
+
+        // Asignar permisos según el tipo de documento
+        let permisoQuery;
+        let permisoParams;
+
+        if (tipo_documento === 'acta') {
+            permisoQuery = `
+                INSERT INTO Permisos (usuario_id, documento_acta_id, documento_exp_id, tipo_documento)
+                VALUES ($1, $2, NULL, $3)
             `;
-            db.run(permisoQuery, [usuario.id, documento.id, tipo_documento], function(err) {
-                if (err) {
-                    console.error('Error al asignar permiso:', err.message);
-                    res.status(500).send('Error al asignar permiso.');
-                } else {
-                    res.status(200).send('Permiso asignado correctamente.');
-                }
-            });
-        });
-    });
-}
+            permisoParams = [usuarioId, documentoId, tipo_documento];
+        } else {
+            permisoQuery = `
+                INSERT INTO Permisos (usuario_id, documento_acta_id, documento_exp_id, tipo_documento)
+                VALUES ($1, NULL, $2, $3)
+            `;
+            permisoParams = [usuarioId, documentoId, tipo_documento];
+        }
+
+        await pool.query(permisoQuery, permisoParams);
+
+        res.status(200).send('Permiso asignado correctamente.');
+
+    } catch (error) {
+        console.error('Error al asignar permiso:', error.message);
+        res.status(500).send('Error al asignar permiso.');
+    }
+};
+

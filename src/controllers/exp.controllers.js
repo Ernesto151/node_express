@@ -1,4 +1,4 @@
-import { db } from "../db.js";
+import { pool } from "../db.js";
 
 export const verificarAdminExp= function(req, res, next) {
     if (req.session.rol === 'admin') {
@@ -8,7 +8,7 @@ export const verificarAdminExp= function(req, res, next) {
     }
 }
 
-export const crearExp= function(req,res){
+export const crearExp= async function(req,res){
     const userId = req.session.user_id;
     const datos= req.body;
         
@@ -52,54 +52,46 @@ export const crearExp= function(req,res){
                    req_ingles, otra, indicaciones, observaciones, clasif_aspectos, val_cualit,
                    cumplimiento_plan, num_facultad, cifra_mat_ini, num_exp_revisados, num_infracciones, 
                    num_señalamientos, num_observaciones) 
-                  VALUES(? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? )`;
-            //console.log(datos);
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, 
+                         $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)
+                 RETURNING id`;
             
-    db.run(insertar,[nombreDoc, facultadExp, curso, tipoCurso, carrera, fechaExp, participantes, 
-                     objetivoExp, general, h_matricula, titulos, s_militar, ev_integradas, h_resultado, 
-                     convalidaciones, r_matricula, reingresos, licencia, ingles, otra, indicaciones, 
-                     observaciones, clasif_aspectos, val_cualitativa, plan_docente, num_facultad, 
-                     cif_mat_ini, exp_revisados, num_infracciones, num_señalamientos, num_observaciones], 
-                function(error){
-                if(error){
-                    throw error;
-                }
-                else{
-                    console.log("Datos almacenados");
+            try {
+            const documentResult = await pool.query(insertar, [
+                    nombreDoc, facultadExp, curso, tipoCurso, carrera, fechaExp, participantes, 
+                    objetivoExp, general, h_matricula, titulos, s_militar, ev_integradas, h_resultado, 
+                    convalidaciones, r_matricula, reingresos, licencia, ingles, otra, indicaciones, 
+                    observaciones, clasif_aspectos, val_cualitativa, plan_docente, num_facultad, 
+                    cif_mat_ini, exp_revisados, num_infracciones, num_señalamientos, num_observaciones]);
 
-// Crear la notificación
-const documentosExpId = this.lastID; // Obtén el ID del último registro insertado
-const mensaje = `Se creó el documento "${nombreDoc}"`;
-const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
+            console.log("Datos almacenados");
+            const documentosExpId = documentResult.rows[0].id;
+
+    // Crear la notificación
+    const mensaje = `Se creó el documento "${nombreDoc}"`;
+    const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) 
+                                VALUES ($1, $2, $3, $4)
+                                RETURNING id`;
 
     console.log('documentosExpId:', documentosExpId);
 
-    db.run(insertNotification, [mensaje, fechaExp,null, documentosExpId], (err) => {
-        if (err) {
-            console.error('Error al guardar la notificación:', err.message);
-            return res.status(500).send('Error al guardar la notificación.');
-        }
-// Insertar en DocumentosActas_usuario
-const insertRelation = `
-INSERT INTO DocumentosExp_usuario (usuario_id, DocumentosExp_id)
-VALUES (?, ?)
-`;
+    await pool.query(insertNotification, [mensaje, fechaExp,null, documentosExpId]);
 
-db.run(insertRelation, [userId, documentosExpId], (err) => {
-if (err) {
-    console.error('Error al guardar la relación usuario-documento acta:', err.message);
-    return res.status(500).send('Error al guardar la relación usuario-documento acta.');
+     // Insertar en DocumentosActas_usuario
+    const insertRelation = `INSERT INTO DocumentosExp_usuario (usuario_id, DocumentosExp_id)
+                            VALUES ($1, $2)`;
+
+    await pool.query(insertRelation, [userId, documentosExpId]);
+
+
+    res.redirect('/principal');
+}catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).send('Error al procesar la solicitud.');
 }
-
-
-        res.redirect('/principal');
-    });
-});
-}
-});   
 };
 
-export const listarExp= (req, res)=>{
+export const listarExp= async (req, res)=>{
     const userId = req.session.user_id;
     const userRole = req.session.rol;
 
@@ -122,60 +114,55 @@ export const listarExp= (req, res)=>{
                 DocumentosExp.num_exp_revisados, DocumentosExp.num_infracciones, DocumentosExp.num_señalamientos, 
                 DocumentosExp.num_observaciones
         FROM DocumentosExp
-        JOIN Permisos ON DocumentosExp.id = Permisos.documento_id
-        WHERE Permisos.usuario_id = ?
-    `;
+        JOIN Permisos ON DocumentosExp.id = Permisos.documento_exp_id
+        WHERE Permisos.usuario_id = $1`;
 }
             
-db.all(query, userRole === 'usuario' ? [userId] : [], (err, rows) => {
-    if (err) {
-        console.error("Error al obtener los datos de la base de datos:", err.message);
-        return res.status(500).send("Error al obtener los datos.");
-    }
+try {
+    const { rows } = await pool.query(query, userRole === 'usuario' ? [userId] : []);
     console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
     res.json({ documentos: rows, rol: userRole });
-
-    });
+} catch (error) {
+    console.error("Error al obtener los datos de la tabla DocumentosExp:", error.message);
+    res.status(500).send('Error al obtener los datos.');
+}
 }
 
-    export const mostrarExp = (req, res) => {
+    export const mostrarExp = async (req, res) => {
         const { nombre } = req.params;
         const userRole = req.session.rol;
         
-            db.all("SELECT * FROM DocumentosExp WHERE nombre = ?", [nombre], (err, rows) => {
-                if (err) {
-                    console.error("Error al obtener los datos de la base de datos:", err.message);
-                    res.status(500).send("Error al obtener los datos.");
-                    return;
-                } 
-                console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
-    
-                res.status(200).json({ documentos: rows, rol: userRole });
-            });
+        try {
+            const { rows } = await pool.query("SELECT * FROM DocumentosExp WHERE nombre = $1", [nombre]);
+            console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
+            res.status(200).json({ documentos: rows, rol: userRole });
+        } catch (err) {
+            console.error("Error al obtener los datos de la base de datos:", err.message);
+            res.status(500).send("Error al obtener los datos.");
+        }
             
         }
 
-export const eliminarExp= (req, res)=>{
+export const eliminarExp= async (req, res)=>{
     const {id}= req.params;
     //console.log(`Solicitud para eliminar expediente con ID: ${id}`);
-    db.run("DELETE FROM DocumentosExp WHERE id=$1",[id], function(err){
-        if (err) {
-            console.error("Error al eliminar al datos:", err.message);
-            res.status(500).send("Error al eliminar los datos.");
-            return;
-        }
-            
-        if (this.changes === 0) {
+    
+    try {
+        const result = await pool.query("DELETE FROM DocumentosExp WHERE id = $1", [id]);
+
+        if (result.rowCount === 0) {
             res.status(404).send("No se encontró el expediente con el ID proporcionado.");
-            } 
-        else {
+        } else {
             console.log(`Expediente con ID ${id} eliminado.`);
             res.status(200).send(`Expediente con ID ${id} eliminado correctamente.`);
-            }
-        });
+        }
+    } catch (err) {
+        console.error("Error al eliminar los datos:", err.message);
+        res.status(500).send("Error al eliminar los datos.");
+    }
     }
 
-export const editarExp = (req, res) => {
+export const editarExp = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
     
@@ -189,24 +176,24 @@ export const editarExp = (req, res) => {
                            num_señalamientos= $30, num_observaciones= $31
                        WHERE id =$32`;
     
-    db.run(query, [data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, data.participantes, 
-                   data.objetivo, data.señ_general, data.hoja_matricula, data.titulos_e, data.doc_SM, data.eval_integ, 
-                   data.hoja_result, data.convalidaciones, data.ratif_matric, data.reingresos, data.alta_lic_mat, 
-                   data.req_ingles, data.otra, data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit,
-                   data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, data.num_infracciones, 
-                   data.num_señalamientos, data.num_observaciones, id], 
-    function(err) {
-        if (err) {
-            console.error("Error al actualizar los datos:", err.message);
-            res.status(500).send("Error al actualizar los datos.");
-            return;
-        }
-    
-        if (this.changes === 0) {
-            res.status(404).send("No se encontró el expediente con el ID proporcionado.");
-            } 
-        else {
-            res.status(200).send(`Expediente con ID ${id} actualizada correctamente.`);
-            }
-        });
+        try {
+         const result = await pool.query(query, [
+             data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
+             data.participantes, data.objetivo, data.señ_general, data.hoja_matricula, 
+             data.titulos_e, data.doc_SM, data.eval_integ, data.hoja_result, data.convalidaciones, 
+             data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
+             data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
+             data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
+             data.num_infracciones, data.num_señalamientos, data.num_observaciones, id
+         ]);
+                
+         if (result.rowCount === 0) {
+             res.status(404).send("No se encontró el expediente con el ID proporcionado.");
+         } else {
+             res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
+         }
+    } catch (err) {
+        console.error("Error al actualizar los datos:", err.message);
+        res.status(500).send("Error al actualizar los datos.");
+    }
     }

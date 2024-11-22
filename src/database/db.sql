@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS DocumentosActas(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     facultad VARCHAR(100) NOT NULL,
     fecha TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS DocumentosActas(
 
 
 CREATE TABLE IF NOT EXISTS DocumentosExp(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     facultad VARCHAR(100) NOT NULL,
     curso INTEGER NOT NULL,
@@ -47,9 +47,10 @@ CREATE TABLE IF NOT EXISTS DocumentosExp(
     num_observaciones INTEGER NOT NULL);
 
 CREATE TABLE IF NOT EXISTS Usuarios(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     usuario TEXT NOT NULL,
-    contraseña PASSWORD NOT NULL);
+    contraseña TEXT NOT NULL,
+    rol TEXT NOT NULL);
 
 -- CREATE TABLE IF NOT EXISTS Notificaciones (
 --     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,25 +59,26 @@ CREATE TABLE IF NOT EXISTS Usuarios(
 -- );
 
 CREATE TABLE IF NOT EXISTS Notificaciones (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     mensaje TEXT NOT NULL,
     fecha TEXT NOT NULL,
     documentosActas_id INTEGER,
     documentosExp_id INTEGER,
-    FOREIGN KEY (documentosActas_id) REFERENCES DocumentosActa(id),
+    FOREIGN KEY (documentosActas_id) REFERENCES DocumentosActas(id) ON DELETE CASCADE,
     FOREIGN KEY (documentosExp_id) REFERENCES DocumentosExp(id) ON DELETE CASCADE
-    )
+
+    );
 
 -- agregar columna a la tabla usuarios con el nombre rol
 ALTER TABLE Usuarios ADD COLUMN rol TEXT NOT NULL;
 
 CREATE TABLE IF NOT EXISTS Permisos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     usuario_id INTEGER,
     documento_id INTEGER,
     tipo_documento TEXT, 
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
-    FOREIGN KEY (documento_id) REFERENCES DocumentosActa(id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (documento_id) REFERENCES DocumentosActas(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS DocumentosExp_usuario(
@@ -84,4 +86,11 @@ CREATE TABLE IF NOT EXISTS DocumentosExp_usuario(
     DocumentosExp_id INTEGER NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
     FOREIGN KEY (documentosExp_id) REFERENCES DocumentoExp(id) ON DELETE CASCADE
- )
+ );
+
+CREATE TABLE IF NOT EXISTS DocumentosActas_usuario(
+    usuario_id INTEGER NOT NULL,
+    DocumentosActas_id INTEGER NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
+    FOREIGN KEY (documentosActas_id) REFERENCES DocumentosActas(id) ON DELETE CASCADE
+ );
