@@ -10,9 +10,7 @@ export const pool= new pg.Pool({
     // database:"datos",
     // port:"5432",
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false,
-      }
+    ssl: true
 });
 
 // pool.query(`
