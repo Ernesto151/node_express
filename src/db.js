@@ -1,6 +1,6 @@
 import pg from 'pg';
 import {config} from 'dotenv';
-import { connectionString } from 'pg/lib/defaults';
+
 
 config();
 
