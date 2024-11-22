@@ -1,8 +1,8 @@
 import pg from 'pg';
-//import {config} from 'dotenv';
+import {config} from 'dotenv';
 //import { connectionString } from 'pg/lib/defaults';
 
-//config();
+config();
 
 export const pool= new pg.Pool({
     user:"postgres",
