@@ -4,10 +4,12 @@ import {config} from 'dotenv';
 
 config();
 
-export const pool= new pg.Pool({
-   
-    connectionString: process.env.DATABASE_URL
-});
+export const pool = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
 
 // pool.query(`
 // CREATE TABLE Permisos (
