@@ -8,7 +8,7 @@ export const pool= new pg.Pool({
     host:"localhost",
     password:"12345",
     database:"datos",
-    port:"5432",
+    port:"5432"
     //connectionString: process.env.DATABASE_URL,
     //ssl: true
 });
