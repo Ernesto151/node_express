@@ -8,9 +8,11 @@ export const pool= new pg.Pool({
     host:'ep-spring-resonance-a5ecjrn1.us-east-2.aws.neon.tech',
     password:'LE1WViqlxw2z',
     database:'datos',
-    port:"5432"
+    port:"5432",
     //connectionString: process.env.DATABASE_URL,
-    //ssl: true
+    ssl: {
+        rejectUnauthorized: false 
+    }
 });
 
 // pool.query(`
