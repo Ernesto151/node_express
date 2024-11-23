@@ -20,7 +20,7 @@ export const insertarUsuario= async(req,res)=>{
         }
 
         // Si el usuario no existe, insertar el nuevo usuario
-        const insertarU = `INSERT INTO Usuarios (usuario, contraseña, rol) VALUES ($1, $2, $3)`;
+        const insertarU = `INSERT INTO Usuarios (usuario, contrasena, rol) VALUES ($1, $2, $3)`;
 
         await pool.query(insertarU, [usuarioR, contraseñaR, rolR]);
 

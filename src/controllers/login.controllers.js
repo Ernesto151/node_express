@@ -4,7 +4,7 @@ export const autenticarUsuario= async (req, res)=>{
        const { usernameLogin, passwordLogin } = req.body;
 
     // Consulta para verificar si el usuario y la contraseña coinciden en la misma fila
-    const query = `SELECT * FROM Usuarios WHERE usuario = $1 AND contraseña = $2`;
+    const query = `SELECT * FROM Usuarios WHERE usuario = $1 AND contrasena = $2`;
     
     try {
         // Ejecutar la consulta para verificar el usuario y la contraseña

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS DocumentosExp(
     fecha TEXT NOT NULL,
     participantes TEXT NOT NULL,
     objetivo TEXT NOT NULL,
-    señ_general TEXT NOT NULL,
+    sen_general TEXT NOT NULL,
     hoja_matricula TEXT NOT NULL,
     titulos_e TEXT NOT NULL,
     doc_SM TEXT NOT NULL,
@@ -43,13 +43,13 @@ CREATE TABLE IF NOT EXISTS DocumentosExp(
     cifra_mat_ini INTEGER NOT NULL,
     num_exp_revisados INTEGER NOT NULL,
     num_infracciones INTEGER NOT NULL,
-    num_señalamientos INTEGER NOT NULL,
+    num_senalamientos INTEGER NOT NULL,
     num_observaciones INTEGER NOT NULL);
 
 CREATE TABLE IF NOT EXISTS Usuarios(
     id SERIAL PRIMARY KEY,
     usuario TEXT NOT NULL,
-    contraseña TEXT NOT NULL,
+    contrasena TEXT NOT NULL,
     rol TEXT NOT NULL);
 
 -- CREATE TABLE IF NOT EXISTS Notificaciones (
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS DocumentosExp_usuario(
     usuario_id INTEGER NOT NULL,
     DocumentosExp_id INTEGER NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
-    FOREIGN KEY (documentosExp_id) REFERENCES DocumentoExp(id) ON DELETE CASCADE
+    FOREIGN KEY (documentosExp_id) REFERENCES DocumentosExp(id) ON DELETE CASCADE
  );
 
 CREATE TABLE IF NOT EXISTS DocumentosActas_usuario(
