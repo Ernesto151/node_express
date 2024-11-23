@@ -1,16 +1,16 @@
 import pg from 'pg';
-import {config} from 'dotenv';
+//import {config} from 'dotenv';
 
 config();
 
 export const pool= new pg.Pool({
-    // user:"postgres",
-    // host:"localhost",
-    // password:"12345",
-    // database:"datos",
-    // port:"5432",
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
+    user:"postgres",
+    host:"localhost",
+    password:"12345",
+    database:"datos",
+    port:"5432",
+    //connectionString: process.env.DATABASE_URL,
+    //ssl: true
 });
 
 // pool.query(`
