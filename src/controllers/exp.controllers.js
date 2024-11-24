@@ -179,12 +179,12 @@ export const editarExp = async (req, res) => {
         try {
          const result = await pool.query(query, [
              data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
-             data.participantes, data.objetivo, data.señ_general, data.hoja_matricula, 
+             data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
              data.titulos_e, data.doc_SM, data.eval_integ, data.hoja_result, data.convalidaciones, 
              data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
              data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
              data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
-             data.num_infracciones, data.num_señalamientos, data.num_observaciones, id
+             data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
          ]);
                 
          if (result.rowCount === 0) {
