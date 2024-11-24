@@ -47,7 +47,7 @@ export const crearExp= async function(req,res){
     
     let insertar=`INSERT INTO DocumentosExp(
                    nombre, facultad, curso, t_curso, carrera, fecha, participantes, 
-                   objetivo, sen_general, hoja_matricula, titulos_e, doc_SM, eval_integ, 
+                   objetivo, sen_general, hoja_matricula, titulos_e, doc_sm, eval_integ, 
                    hoja_result, convalidaciones, ratif_matric, reingresos, alta_lic_mat, 
                    req_ingles, otra, indicaciones, observaciones, clasif_aspectos, val_cualit,
                    cumplimiento_plan, num_facultad, cifra_mat_ini, num_exp_revisados, num_infracciones, 
@@ -96,7 +96,7 @@ export const listarExp= async (req, res)=>{
     const userRole = req.session.rol;
 
     let query= `SELECT id, nombre, facultad, curso, t_curso, carrera, fecha, participantes, 
-                   objetivo, sen_general, hoja_matricula, titulos_e, doc_SM, eval_integ, 
+                   objetivo, sen_general, hoja_matricula, titulos_e, doc_sm, eval_integ, 
                    hoja_result, convalidaciones, ratif_matric, reingresos, alta_lic_mat, 
                    req_ingles, otra, indicaciones, observaciones, clasif_aspectos, val_cualit,
                    cumplimiento_plan, num_facultad, cifra_mat_ini, num_exp_revisados, num_infracciones, 
@@ -107,7 +107,7 @@ export const listarExp= async (req, res)=>{
         SELECT DocumentosExp.id, DocumentosExp.nombre, DocumentosExp.facultad, DocumentosExp.curso, 
                 DocumentosExp.t_curso, DocumentosExp.carrera, DocumentosExp.fecha, DocumentosExp.participantes, 
                 DocumentosExp.objetivo, DocumentosExp.sen_general, DocumentosExp.hoja_matricula, DocumentosExp.titulos_e, 
-                DocumentosExp.doc_SM, DocumentosExp.eval_integ, DocumentosExp.hoja_result, DocumentosExp.convalidaciones, 
+                DocumentosExp.doc_sm, DocumentosExp.eval_integ, DocumentosExp.hoja_result, DocumentosExp.convalidaciones, 
                 DocumentosExp.ratif_matric, DocumentosExp.reingresos, DocumentosExp.alta_lic_mat, DocumentosExp.req_ingles, 
                 DocumentosExp.otra, DocumentosExp.indicaciones, DocumentosExp.observaciones, DocumentosExp.clasif_aspectos, 
                 DocumentosExp.val_cualit, DocumentosExp.cumplimiento_plan, DocumentosExp.num_facultad, DocumentosExp.cifra_mat_ini, 
@@ -169,7 +169,7 @@ export const editarExp = async (req, res) => {
         // SQL para actualizar varios campos
     const query = `UPDATE DocumentosExp 
                        SET nombre= $1, facultad= $2, curso= $3, t_curso= $4, carrera= $5, fecha= $6, participantes= $7, 
-                           objetivo= $8, sen_general= $9, hoja_matricula= $10, titulos_e= $11, doc_SM= $12, eval_integ= $13, 
+                           objetivo= $8, sen_general= $9, hoja_matricula= $10, titulos_e= $11, doc_sm= $12, eval_integ= $13, 
                            hoja_result= $14, convalidaciones= $15, ratif_matric= $16, reingresos= $17, alta_lic_mat= $18, 
                            req_ingles= $19, otra= $20, indicaciones= $21, observaciones= $22, clasif_aspectos= $23, val_cualit= $24,
                            cumplimiento_plan= $25, num_facultad= $26, cifra_mat_ini= $27, num_exp_revisados= $28, num_infracciones= $29, 
@@ -180,7 +180,7 @@ export const editarExp = async (req, res) => {
          const result = await pool.query(query, [
              data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
              data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
-             data.titulos_e, data.doc_SM, data.eval_integ, data.hoja_result, data.convalidaciones, 
+             data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
              data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
              data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
              data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
