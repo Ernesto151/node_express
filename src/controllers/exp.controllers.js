@@ -56,39 +56,39 @@ export const crearExp= async function(req,res){
                          $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)
                  RETURNING id`;
             
-            try {
-            const documentResult = await pool.query(insertar, [
-                    nombreDoc, facultadExp, curso, tipoCurso, carrera, fechaExp, participantes, 
-                    objetivoExp, general, h_matricula, titulos, s_militar, ev_integradas, h_resultado, 
-                    convalidaciones, r_matricula, reingresos, licencia, ingles, otra, indicaciones, 
-                    observaciones, clasif_aspectos, val_cualitativa, plan_docente, num_facultad, 
-                    cif_mat_ini, exp_revisados, num_infracciones, num_señalamientos, num_observaciones]);
+    try {
+        const documentResult = await pool.query(insertar, [
+              nombreDoc, facultadExp, curso, tipoCurso, carrera, fechaExp, participantes, 
+              objetivoExp, general, h_matricula, titulos, s_militar, ev_integradas, h_resultado, 
+              convalidaciones, r_matricula, reingresos, licencia, ingles, otra, indicaciones, 
+              observaciones, clasif_aspectos, val_cualitativa, plan_docente, num_facultad, 
+              cif_mat_ini, exp_revisados, num_infracciones, num_señalamientos, num_observaciones]);
 
-            console.log("Datos almacenados");
-            const documentosExpId = documentResult.rows[0].id;
+        console.log("Datos almacenados");
+        const documentosExpId = documentResult.rows[0].id;
 
-    // Crear la notificación
-    const mensaje = `Se creó el documento "${nombreDoc}"`;
-    const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) 
-                                VALUES ($1, $2, $3, $4)
-                                RETURNING id`;
+        // Crear la notificación
+        const mensaje = `Se creó el documento "${nombreDoc}"`;
+        const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) 
+                                    VALUES ($1, $2, $3, $4)
+                                    RETURNING id`;
 
-    console.log('documentosExpId:', documentosExpId);
+        console.log('documentosExpId:', documentosExpId);
 
-    await pool.query(insertNotification, [mensaje, fechaExp,null, documentosExpId]);
+        await pool.query(insertNotification, [mensaje, fechaExp,null, documentosExpId]);
 
-     // Insertar en DocumentosActas_usuario
-    const insertRelation = `INSERT INTO DocumentosExp_usuario (usuario_id, DocumentosExp_id)
-                            VALUES ($1, $2)`;
+         // Insertar en DocumentosActas_usuario
+        const insertRelation = `INSERT INTO DocumentosExp_usuario (usuario_id, DocumentosExp_id)
+                                VALUES ($1, $2)`;
 
-    await pool.query(insertRelation, [userId, documentosExpId]);
+        await pool.query(insertRelation, [userId, documentosExpId]);
 
 
-    res.redirect('/principal');
-}catch (error) {
-    console.error('Error:', error.message);
-    res.status(500).send('Error al procesar la solicitud.');
-}
+        res.redirect('/principal');
+    }catch (error) {
+         console.error('Error:', error.message);
+         res.status(500).send('Error al procesar la solicitud.');
+    }
 };
 
 export const listarExp= async (req, res)=>{
@@ -103,8 +103,8 @@ export const listarExp= async (req, res)=>{
                    num_senalamientos, num_observaciones FROM DocumentosExp`;
 
     if (userRole === 'usuario') {
-    query = `
-        SELECT DocumentosExp.id, DocumentosExp.nombre, DocumentosExp.facultad, DocumentosExp.curso, 
+        query = `
+            SELECT DocumentosExp.id, DocumentosExp.nombre, DocumentosExp.facultad, DocumentosExp.curso, 
                 DocumentosExp.t_curso, DocumentosExp.carrera, DocumentosExp.fecha, DocumentosExp.participantes, 
                 DocumentosExp.objetivo, DocumentosExp.sen_general, DocumentosExp.hoja_matricula, DocumentosExp.titulos_e, 
                 DocumentosExp.doc_sm, DocumentosExp.eval_integ, DocumentosExp.hoja_result, DocumentosExp.convalidaciones, 
@@ -113,39 +113,38 @@ export const listarExp= async (req, res)=>{
                 DocumentosExp.val_cualit, DocumentosExp.cumplimiento_plan, DocumentosExp.num_facultad, DocumentosExp.cifra_mat_ini, 
                 DocumentosExp.num_exp_revisados, DocumentosExp.num_infracciones, DocumentosExp.num_senalamientos, 
                 DocumentosExp.num_observaciones
-        FROM DocumentosExp
-        JOIN Permisos ON DocumentosExp.id = Permisos.documento_exp_id
-        WHERE Permisos.usuario_id = $1`;
-}
+            FROM DocumentosExp
+            JOIN Permisos ON DocumentosExp.id = Permisos.documento_exp_id
+            WHERE Permisos.usuario_id = $1`;
+    }
             
-try {
-    const { rows } = await pool.query(query, userRole === 'usuario' ? [userId] : []);
-    console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
-    res.json({ documentos: rows, rol: userRole });
-} catch (error) {
-    console.error("Error al obtener los datos de la tabla DocumentosExp:", error.message);
-    res.status(500).send('Error al obtener los datos.');
-}
+    try {
+        const { rows } = await pool.query(query, userRole === 'usuario' ? [userId] : []);
+        console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
+        res.json({ documentos: rows, rol: userRole });
+    } catch (error) {
+        console.error("Error al obtener los datos de la tabla DocumentosExp:", error.message);
+        res.status(500).send('Error al obtener los datos.');
+    }
 }
 
-    export const mostrarExp = async (req, res) => {
-        const { nombre } = req.params;
-        const userRole = req.session.rol;
+export const mostrarExp = async (req, res) => {
+    const { nombre } = req.params;
+    const userRole = req.session.rol;
         
-        try {
-            const { rows } = await pool.query("SELECT * FROM DocumentosExp WHERE nombre = $1", [nombre]);
-            console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
-            res.status(200).json({ documentos: rows, rol: userRole });
-        } catch (err) {
-            console.error("Error al obtener los datos de la base de datos:", err.message);
-            res.status(500).send("Error al obtener los datos.");
-        }
+    try {
+        const { rows } = await pool.query("SELECT * FROM DocumentosExp WHERE nombre = $1", [nombre]);
+        console.log("Datos obtenidos de la tabla DocumentosExp:", rows);
+        res.status(200).json({ documentos: rows, rol: userRole });
+    } catch (err) {
+        console.error("Error al obtener los datos de la base de datos:", err.message);
+        res.status(500).send("Error al obtener los datos.");
+    }
             
-        }
+}
 
 export const eliminarExp= async (req, res)=>{
     const {id}= req.params;
-    //console.log(`Solicitud para eliminar expediente con ID: ${id}`);
     
     try {
         const result = await pool.query("DELETE FROM DocumentosExp WHERE id = $1", [id]);
@@ -160,14 +159,23 @@ export const eliminarExp= async (req, res)=>{
         console.error("Error al eliminar los datos:", err.message);
         res.status(500).send("Error al eliminar los datos.");
     }
-    }
+}
 
 export const editarExp = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
+    const userId = req.session.user_id;
+
+    await pool.query('SELECT usuario FROM Usuarios WHERE id = ?', [userId], async (err, row) => {
+        if (err) {
+            console.error('Error al obtener el nombre del usuario:', err.message);
+            return res.status(500).send('Error al obtener el nombre del usuario.');
+        }
+    
+        const userName = row.usuario;
     
         // SQL para actualizar varios campos
-    const query = `UPDATE DocumentosExp 
+        const query = `UPDATE DocumentosExp 
                        SET nombre= $1, facultad= $2, curso= $3, t_curso= $4, carrera= $5, fecha= $6, participantes= $7, 
                            objetivo= $8, sen_general= $9, hoja_matricula= $10, titulos_e= $11, doc_sm= $12, eval_integ= $13, 
                            hoja_result= $14, convalidaciones= $15, ratif_matric= $16, reingresos= $17, alta_lic_mat= $18, 
@@ -177,23 +185,30 @@ export const editarExp = async (req, res) => {
                        WHERE id =$32`;
     
         try {
-         const result = await pool.query(query, [
-             data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
-             data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
-             data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
-             data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
-             data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
-             data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
-             data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
-         ]);
+            const result = await pool.query(query, [
+                data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
+                data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
+                data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
+                data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
+                data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
+                data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
+                data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
+            ]);
                 
-         if (result.rowCount === 0) {
-             res.status(404).send("No se encontró el expediente con el ID proporcionado.");
-         } else {
-             res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
+            if (result.rowCount === 0) {
+                res.status(404).send("No se encontró el expediente con el ID proporcionado.");
+            } else {
+                // Crear la notificación
+                const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
+                const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
+                const fechaActual = new Date().toISOString().split('T')[0];
+    
+                await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
+                res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
          }
-    } catch (err) {
-        console.error("Error al actualizar los datos:", err.message);
-        res.status(500).send("Error al actualizar los datos.");
-    }
-    }
+        } catch (err) {
+            console.error("Error al actualizar los datos:", err.message);
+            res.status(500).send("Error al actualizar los datos.");
+        }
+    });
+}

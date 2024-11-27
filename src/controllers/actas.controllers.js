@@ -27,38 +27,36 @@ export const crearAct= async(req,res)=>{
     let registrar=`INSERT INTO DocumentosActas(nombre, facultad, fecha, hora, etapa, objetivo, descripcion, problemas, inspector, cargo)
                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                    RETURNING id`;
-            //console.log(datos);
             
-        try{
-            const documentResult = await pool.query(registrar, [nombreDoc, facultadAct, fechaAct, horaAct,
-                                         etapaAct, objetivoAct, descripcionAct, problemasAct, 
-                                         inspectorAct, cargoAct,]);
+    try{
+        const documentResult = await pool.query(registrar, [nombreDoc, facultadAct, fechaAct, horaAct,
+                                                etapaAct, objetivoAct, descripcionAct, problemasAct, 
+                                                inspectorAct, cargoAct,]);
 
-            console.log("Datos almacenados");
-            const documentosActasId = documentResult.rows[0].id;
+        console.log("Datos almacenados");
+        const documentosActasId = documentResult.rows[0].id;
 
-            // Crear la notificación
-            const mensaje = `Se creó el documento "${nombreDoc}"`;
-            const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) 
-                                        VALUES ($1, $2, $3, $4)
-                                        RETURNING id`;
+        // Crear la notificación
+        const mensaje = `Se creó el documento "${nombreDoc}"`;
+        const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) 
+                                    VALUES ($1, $2, $3, $4)
+                                    RETURNING id`;
         
-            await pool.query(insertNotification, [mensaje, fechaAct, documentosActasId, null]);
+        await pool.query(insertNotification, [mensaje, fechaAct, documentosActasId, null]);
             
 
         // Insertar en DocumentosActas_usuario
         const insertRelation = `
         INSERT INTO DocumentosActas_usuario (usuario_id, DocumentosActas_id)
-        VALUES ($1, $2)
-`; 
+               VALUES ($1, $2)`; 
 
-  await pool.query(insertRelation, [userId, documentosActasId]);
+        await pool.query(insertRelation, [userId, documentosActasId]);
 
-  res.redirect('/principal');
-}catch (error) {
-    console.error('Error:', error.message);
-    res.status(500).send('Error al procesar la solicitud.');
-}  
+        res.redirect('/principal');
+    }catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).send('Error al procesar la solicitud.');
+    }  
 };
 
 export const listarAct = async (req, res) => {
@@ -68,40 +66,39 @@ export const listarAct = async (req, res) => {
     let query = `SELECT id, nombre, facultad, fecha, hora, etapa, objetivo, descripcion, problemas, inspector, cargo 
                  FROM DocumentosActas`;
         
-           if (userRole === 'usuario') {
+    if (userRole === 'usuario') {
                 // Consulta para usuarios con rol 'usuario', solo muestra los documentos con permiso
-                query = `
-                    SELECT DocumentosActas.id, DocumentosActas.nombre, DocumentosActas.facultad, DocumentosActas.fecha, 
-                           DocumentosActas.hora, DocumentosActas.etapa, DocumentosActas.objetivo, DocumentosActas.descripcion, 
-                           DocumentosActas.problemas, DocumentosActas.inspector, DocumentosActas.cargo
-                    FROM DocumentosActas
-                    JOIN Permisos ON DocumentosActas.id = Permisos.documento_acta_id
-                    WHERE Permisos.usuario_id = $1`;
-            }
+        query = `SELECT DocumentosActas.id, DocumentosActas.nombre, DocumentosActas.facultad, DocumentosActas.fecha, 
+                        DocumentosActas.hora, DocumentosActas.etapa, DocumentosActas.objetivo, DocumentosActas.descripcion, 
+                        DocumentosActas.problemas, DocumentosActas.inspector, DocumentosActas.cargo
+                 FROM DocumentosActas
+                 JOIN Permisos ON DocumentosActas.id = Permisos.documento_acta_id
+                 WHERE Permisos.usuario_id = $1`;
+    }
         
-            try{
-            // Ejecuta la consulta según el rol del usuario
-            const { rows } = await pool.query(query, userRole === 'usuario' ? [userId] :[]);
-                console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
-                res.json({ documentos: rows, rol: userRole });
-            } catch (error) {
-                console.error("Error al obtener los datos de la tabla DocumentosActas:", error.message);
-                res.status(500).send('Error al obtener los datos.');
-            }
-        };
+    try{
+        // Ejecuta la consulta según el rol del usuario
+        const { rows } = await pool.query(query, userRole === 'usuario' ? [userId] :[]);
+            console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
+            res.json({ documentos: rows, rol: userRole });
+    } catch (error) {
+            console.error("Error al obtener los datos de la tabla DocumentosActas:", error.message);
+            res.status(500).send('Error al obtener los datos.');
+    }
+};
         
 export const mostrarAct= async (req,res)=>{
     const {nombre}= req.params;
     const userRole = req.session.rol;
 
     try{
-    const { rows } = await pool.query("SELECT * FROM DocumentosActas WHERE nombre=$1",[nombre]);
-    console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
-    res.status(200).json({ documentos: rows, rol: userRole });
-} catch (err) {
-    console.error("Error al obtener los datos de la base de datos:", err.message);
-    res.status(500).send("Error al obtener los datos.");
-}
+        const { rows } = await pool.query("SELECT * FROM DocumentosActas WHERE nombre=$1",[nombre]);
+        console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
+        res.status(200).json({ documentos: rows, rol: userRole });
+    } catch (err) {
+        console.error("Error al obtener los datos de la base de datos:", err.message);
+        res.status(500).send("Error al obtener los datos.");
+    }
 }
 
 export const eliminarAct= async (req, res)=>{
@@ -128,6 +125,15 @@ export const eliminarAct= async (req, res)=>{
 export const editarAct = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
+    const userId = req.session.user_id;
+
+    await pool.query('SELECT usuario FROM Usuarios WHERE id = ?', [userId], async (err, row) => {
+        if (err) {
+            console.error('Error al obtener el nombre del usuario:', err.message);
+            return res.status(500).send('Error al obtener el nombre del usuario.');
+        }
+    
+        const userName = row.usuario;
 
     // SQL para actualizar varios campos
     const query = `UPDATE DocumentosActas 
@@ -143,11 +149,17 @@ export const editarAct = async (req, res) => {
         if (result.rowCount === 0) {
             res.status(404).send("No se encontró el acta con el ID proporcionado.");
         } else {
-            
-            res.status(200).send(`Acta con ID ${id} actualizada correctamente.`);
+              // Crear la notificación
+              const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
+              const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
+              const fechaActual = new Date().toISOString().split('T')[0];
+
+              await pool.query(insertNotification,[mensaje, fechaActual, id, null]);
+              res.status(200).send(`Acta con ID ${id} actualizada correctamente.`);
         }
     } catch (err) {
         console.error("Error al actualizar los datos:", err.message);
         res.status(500).send("Error al actualizar los datos.");
     }
+});
 }

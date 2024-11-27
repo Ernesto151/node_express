@@ -24,10 +24,24 @@
         </form>
         <p class="register-text">
             ¿No tienes una cuenta? 
-            <a href="/registrar">Regístrate aquí</a>
+            <button id="linkRegistrarse" onclick="abrirModalAutPermiso()">Regístrate aquí</button>
         </p>
     </div>
 
+    <!-- Modal para autenticación -->
+    <div id="authModal" class="modal" style="display: none;">
+        <div class="modal-content-verificar">
+            <span class="close" onclick="cerrarModalAutPermiso()">&times;</span>
+                <h2>Verificar</h2>
+                    <form id="authForm">
+                        <label for="authUser">Usuario:</label>
+                        <input type="text" id="authUser" name="authUser" required>
+                        <label for="authPassword">Contraseña:</label>
+                        <input type="password" id="authPassword" name="authPassword" required>
+                        <button type="submit">Verificar</button>
+                    </form>
+        </div>
+    </div>
     
     <div class="modal" id="errorModal">
         <div class="modal-content">
@@ -75,6 +89,36 @@
             } catch (error) {
                 console.error("Error en la autenticación:", error);
                 mostrarModal();
+            }
+        });
+
+        function abrirModalAutPermiso() {
+                 document.getElementById('authModal').style.display = 'block';
+             }    
+
+function cerrarModalAutPermiso() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const user = document.getElementById('authUser').value;
+            const password = document.getElementById('authPassword').value;
+
+            const response = await fetch('/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user, password })
+            });
+            if (response.ok) {
+                const result = await response.json();
+                if (result.rol === 'admin') {
+                    window.location.href = '/registrar';
+                } else {
+                    alert('No tienes permiso para acceder a esta sección.');
+                }
+            } else {
+                alert('Usuario o contraseña incorrectos.');
             }
         });
     </script>

@@ -103,3 +103,69 @@ h2 {
     color: #333;
     margin-top: 10px;
 }
+
+#authModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; 
+}
+
+.modal-content-verificar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 320px;
+    text-align: center; 
+}
+
+.modal-content-verificar .close {
+    font-size: 24px;
+    font-weight: 400;
+    color: #f33c3c;
+    cursor: pointer;
+    position: relative;
+    padding-left: 270px;
+}
+
+#authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+#authForm label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+}
+
+#authForm input[type="text"],
+#authForm input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#authForm button {
+    padding: 10px 20px;
+    background-color: #f33c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100px;
+    margin: auto;
+}
