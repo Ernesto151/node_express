@@ -69,12 +69,15 @@ h2 {
     color: #666666;
 }
 
-.register-text a {
+#linkRegistrarse {
     color: #f33c3c;
     text-decoration: none;
+    border: none;
+    background-color: #fff;
+    font-size: 15px;
 }
 
-.register-text a:hover {
+#linkRegistrarse {
     text-decoration: underline;
 }
 
