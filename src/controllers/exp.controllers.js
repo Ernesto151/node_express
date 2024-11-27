@@ -197,15 +197,16 @@ export const editarExp = async (req, res) => {
                 
         if (result.rowCount === 0) {
             res.status(404).send("No se encontró el expediente con el ID proporcionado.");
-        } else {
-            // Crear la notificación
-            const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
-            const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
-            const fechaActual = new Date().toISOString().split('T')[0];
-    
-            await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
-            res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
         }
+        // Crear la notificación
+        const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
+        const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id)
+                                    VALUES ($1, $2, $3, $4)`;
+        const fechaActual = new Date().toISOString().split('T')[0];
+    
+        await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
+        return res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
+        
     } catch (err) {
             console.error("Error al actualizar los datos:", err.message);
             return res.status(500).send("Error al actualizar los datos.");
