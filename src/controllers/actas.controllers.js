@@ -127,39 +127,44 @@ export const editarAct = async (req, res) => {
     const data = req.body;
     const userId = req.session.user_id;
 
-    await pool.query('SELECT usuario FROM Usuarios WHERE id = ?', [userId], async (err, row) => {
-        if (err) {
-            console.error('Error al obtener el nombre del usuario:', err.message);
-            return res.status(500).send('Error al obtener el nombre del usuario.');
-        }
-    
-        const userName = row.usuario;
-
-    // SQL para actualizar varios campos
-    const query = `UPDATE DocumentosActas 
-                   SET facultad =$1, fecha =$2, hora =$3, etapa =$4, objetivo =$5, descripcion =$6, problemas =$7, inspector =$8, cargo =$9, nombre =$10
-                   WHERE id =$11`;
-
     try {
-     // Ejecutar la consulta para actualizar el acta
-         const result = await pool.query(query, [
-         data.facultad, data.fecha, data.hora, data.etapa, data.objetivo, data.descripcion, 
-         data.problemas, data.inspector, data.cargo, data.nombre, id]);
+        // Obtener el usuario que está editando el acta
+        const userResult = await pool.query('SELECT usuario FROM Usuarios WHERE id = $1', [userId]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).send('Usuario no encontrado.');
+        }
+
+        const userName = userResult.rows[0].usuario;
+
+        // SQL para actualizar varios campos
+        const query = `UPDATE DocumentosActas 
+                       SET facultad = $1, fecha = $2, hora = $3, etapa = $4, objetivo = $5, 
+                           descripcion = $6, problemas = $7, inspector = $8, cargo = $9, nombre = $10
+                       WHERE id = $11`;
+
+        const result = await pool.query(query, [
+            data.facultad, data.fecha, data.hora, data.etapa, data.objetivo, data.descripcion,
+            data.problemas, data.inspector, data.cargo, data.nombre, id
+        ]);
 
         if (result.rowCount === 0) {
-            res.status(404).send("No se encontró el acta con el ID proporcionado.");
-        } else {
-              // Crear la notificación
-              const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
-              const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
-              const fechaActual = new Date().toISOString().split('T')[0];
-
-              await pool.query(insertNotification,[mensaje, fechaActual, id, null]);
-              res.status(200).send(`Acta con ID ${id} actualizada correctamente.`);
+            return res.status(404).send("No se encontró el acta con el ID proporcionado.");
         }
-    } catch (err) {
-        console.error("Error al actualizar los datos:", err.message);
-        res.status(500).send("Error al actualizar los datos.");
+
+        // Crear la notificación
+        const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
+        const insertNotification = `
+            INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id)
+            VALUES ($1, $2, $3, $4)
+        `;
+        const fechaActual = new Date().toISOString().split('T')[0];
+
+        await pool.query(insertNotification, [mensaje, fechaActual, id, null]);
+
+        return res.status(200).send(`Acta con ID ${id} actualizada correctamente.`);
+    } catch (error) {
+        console.error("Error al procesar la solicitud:", error.message);
+        return res.status(500).send("Error al actualizar los datos.");
     }
-});
-}
+};
