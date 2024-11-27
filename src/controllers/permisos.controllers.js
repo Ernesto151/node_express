@@ -24,7 +24,7 @@ export const asignarPermiso = async (req, res) => {
         const usuarioId = usuarioResult.rows[0].id;
 
         // Obtener el ID del documento según el tipo
-        const documentoTabla = tipo_documento === 'acta' ? 'DocumentosActas' : 'DocumentosExp';
+        const documentoTabla = tipo_documento === 'Acta' ? 'DocumentosActas' : 'DocumentosExp';
         const documentoQuery = `SELECT id FROM ${documentoTabla} WHERE nombre = $1`;
         const documentoResult = await pool.query(documentoQuery, [nombre_documento]);
 
@@ -39,7 +39,7 @@ export const asignarPermiso = async (req, res) => {
         let permisoQuery;
         let permisoParams;
 
-        if (tipo_documento === 'acta') {
+        if (tipo_documento === 'Acta') {
             permisoQuery = `
                 INSERT INTO Permisos (usuario_id, documento_acta_id, documento_exp_id, tipo_documento)
                 VALUES ($1, $2, NULL, $3)

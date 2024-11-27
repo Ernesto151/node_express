@@ -70,10 +70,10 @@ app.get("/listaExp",function(req,res){
     res.render("listaExp.html");
 });
 
-app.get("/fecha", async (req, res)=>{
-    const result= await pool.query('SELECT NOW()');
-    return res.json(result.rows[0]);
-});
+// app.get("/fecha", async (req, res)=>{
+//     const result= await pool.query('SELECT NOW()');
+//     return res.json(result.rows[0]);
+// });
 
 app.listen(3000, function(){
     
