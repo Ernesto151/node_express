@@ -49,7 +49,7 @@ function abrirFormularioEdicionExp(expediente) {
                 <h3 class="ici-cd">ICI CD</h3>
                 <h3 class="asp-señalados">Aspectos señalados:</h3>
                 <label for="general"><b>I. General:</b></label>
-                <textarea name="señ_general">${expediente.sen_general}</textarea>
+                <textarea name="sen_general">${expediente.sen_general}</textarea>
                 <label for="h_matricula">Hoja de matrícula:</label>
                 <textarea name="hoja_matricula">${expediente.hoja_matricula}</textarea>
                 <label for="titulos">Títulos de enseñanza precedente:</label>
@@ -98,7 +98,7 @@ function abrirFormularioEdicionExp(expediente) {
                     <td><input type="number" name="cifra_mat_ini" value="${expediente.cifra_mat_ini}" /></td>
                     <td><input type="number" name="num_exp_revisados" value="${expediente.num_exp_revisados}" /></td>
                     <td><input type="number" name="num_infracciones" value="${expediente.num_infracciones}" /></td>
-                    <td><input type="number" name="num_señalamientos" value="${expediente.num_senalamientos}" /></td>
+                    <td><input type="number" name="num_senalamientos" value="${expediente.num_senalamientos}" /></td>
                     <td><input type="number" name="num_observaciones" value="${expediente.num_observaciones}" /></td>
                 </tr>
                 </table>
