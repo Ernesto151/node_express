@@ -167,6 +167,8 @@ export const editarExp = async (req, res) => {
     const userId = req.session.user_id;
 
     try {
+        console.log("Datos recibidos para actualización:", data);
+
         // Obtener el usuario que está editando el acta
         const userResult = await pool.query('SELECT usuario FROM Usuarios WHERE id = $1', [userId]);
 
@@ -175,40 +177,40 @@ export const editarExp = async (req, res) => {
         }
 
         const userName = userResult.rows[0].usuario;
-    
+
         const query = `UPDATE DocumentosExp 
-                       SET nombre= $1, facultad= $2, curso= $3, t_curso= $4, carrera= $5, fecha= $6, participantes= $7, 
-                           objetivo= $8, sen_general= $9, hoja_matricula= $10, titulos_e= $11, doc_sm= $12, eval_integ= $13, 
-                           hoja_result= $14, convalidaciones= $15, ratif_matric= $16, reingresos= $17, alta_lic_mat= $18, 
-                           req_ingles= $19, otra= $20, indicaciones= $21, observaciones= $22, clasif_aspectos= $23, val_cualit= $24,
-                           cumplimiento_plan= $25, num_facultad= $26, cifra_mat_ini= $27, num_exp_revisados= $28, num_infracciones= $29, 
-                           num_senalamientos= $30, num_observaciones= $31
-                       WHERE id =$32`;
-    
+                       SET nombre = $1, facultad = $2, curso = $3, t_curso = $4, carrera = $5, fecha = $6, participantes = $7, 
+                           objetivo = $8, sen_general = $9, hoja_matricula = $10, titulos_e = $11, doc_sm = $12, eval_integ = $13, 
+                           hoja_result = $14, convalidaciones = $15, ratif_matric = $16, reingresos = $17, alta_lic_mat = $18, 
+                           req_ingles = $19, otra = $20, indicaciones = $21, observaciones = $22, clasif_aspectos = $23, val_cualit = $24,
+                           cumplimiento_plan = $25, num_facultad = $26, cifra_mat_ini = $27, num_exp_revisados = $28, num_infracciones = $29, 
+                           num_senalamientos = $30, num_observaciones = $31
+                       WHERE id = $32`;
+
         const result = await pool.query(query, [
-                                  data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
-                                  data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
-                                  data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
-                                  data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
-                                  data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
-                                  data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
-                                  data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
+            data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
+            data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
+            data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
+            data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
+            data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
+            data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
+            data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
         ]);
-                
+
         if (result.rowCount === 0) {
-            res.status(404).send("No se encontró el expediente con el ID proporcionado.");
+            return res.status(404).send("No se encontró el expediente con el ID proporcionado.");
         }
+
         // Crear la notificación
         const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
         const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id)
                                     VALUES ($1, $2, $3, $4)`;
         const fechaActual = new Date().toISOString().split('T')[0];
-    
-        await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
+
+        await pool.query(insertNotification, [mensaje, fechaActual, null, id]);
         return res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
-        
     } catch (err) {
-            console.error("Error al actualizar los datos:", err.message);
-            return res.status(500).send("Error al actualizar los datos.");
+        console.error("Error al actualizar los datos:", err);
+        return res.status(500).send("Error al actualizar los datos.");
     }
-}
+};
