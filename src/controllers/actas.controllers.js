@@ -144,8 +144,8 @@ export const editarAct = async (req, res) => {
                        WHERE id = $11`;
 
         const result = await pool.query(query, [
-            data.facultad, data.fecha, data.hora, data.etapa, data.objetivo, data.descripcion,
-            data.problemas, data.inspector, data.cargo, data.nombre, id
+                                  data.facultad, data.fecha, data.hora, data.etapa, data.objetivo, data.descripcion,
+                                  data.problemas, data.inspector, data.cargo, data.nombre, id
         ]);
 
         if (result.rowCount === 0) {
@@ -154,10 +154,9 @@ export const editarAct = async (req, res) => {
 
         // Crear la notificación
         const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
-        const insertNotification = `
-            INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id)
-            VALUES ($1, $2, $3, $4)
-        `;
+        const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id)
+                                    VALUES ($1, $2, $3, $4)`;
+
         const fechaActual = new Date().toISOString().split('T')[0];
 
         await pool.query(insertNotification, [mensaje, fechaActual, id, null]);

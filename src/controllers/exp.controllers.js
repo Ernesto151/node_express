@@ -166,15 +166,16 @@ export const editarExp = async (req, res) => {
     const data = req.body;
     const userId = req.session.user_id;
 
-    await pool.query('SELECT usuario FROM Usuarios WHERE id = ?', [userId], async (err, row) => {
-        if (err) {
-            console.error('Error al obtener el nombre del usuario:', err.message);
-            return res.status(500).send('Error al obtener el nombre del usuario.');
+    try {
+        // Obtener el usuario que está editando el acta
+        const userResult = await pool.query('SELECT usuario FROM Usuarios WHERE id = $1', [userId]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).send('Usuario no encontrado.');
         }
+
+        const userName = userResult.rows[0].usuario;
     
-        const userName = row.usuario;
-    
-        // SQL para actualizar varios campos
         const query = `UPDATE DocumentosExp 
                        SET nombre= $1, facultad= $2, curso= $3, t_curso= $4, carrera= $5, fecha= $6, participantes= $7, 
                            objetivo= $8, sen_general= $9, hoja_matricula= $10, titulos_e= $11, doc_sm= $12, eval_integ= $13, 
@@ -184,31 +185,29 @@ export const editarExp = async (req, res) => {
                            num_senalamientos= $30, num_observaciones= $31
                        WHERE id =$32`;
     
-        try {
-            const result = await pool.query(query, [
-                data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
-                data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
-                data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
-                data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
-                data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
-                data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
-                data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
-            ]);
+        const result = await pool.query(query, [
+                                  data.nombre, data.facultad, data.curso, data.t_curso, data.carrera, data.fecha, 
+                                  data.participantes, data.objetivo, data.sen_general, data.hoja_matricula, 
+                                  data.titulos_e, data.doc_sm, data.eval_integ, data.hoja_result, data.convalidaciones, 
+                                  data.ratif_matric, data.reingresos, data.alta_lic_mat, data.req_ingles, data.otra, 
+                                  data.indicaciones, data.observaciones, data.clasif_aspectos, data.val_cualit, 
+                                  data.cumplimiento_plan, data.num_facultad, data.cifra_mat_ini, data.num_exp_revisados, 
+                                  data.num_infracciones, data.num_senalamientos, data.num_observaciones, id
+        ]);
                 
-            if (result.rowCount === 0) {
-                res.status(404).send("No se encontró el expediente con el ID proporcionado.");
-            } else {
-                // Crear la notificación
-                const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
-                const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
-                const fechaActual = new Date().toISOString().split('T')[0];
+        if (result.rowCount === 0) {
+            res.status(404).send("No se encontró el expediente con el ID proporcionado.");
+        } else {
+            // Crear la notificación
+            const mensaje = `El usuario ${userName} editó el documento "${data.nombre}"`;
+            const insertNotification = `INSERT INTO Notificaciones (mensaje, fecha, documentosActas_id, documentosExp_id) VALUES (?, ?, ?, ?)`;
+            const fechaActual = new Date().toISOString().split('T')[0];
     
-                await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
-                res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
-         }
-        } catch (err) {
-            console.error("Error al actualizar los datos:", err.message);
-            res.status(500).send("Error al actualizar los datos.");
+            await pool.query(insertNotification,[mensaje, fechaActual, null,id]);
+            res.status(200).send(`Expediente con ID ${id} actualizado correctamente.`);
         }
-    });
+    } catch (err) {
+            console.error("Error al actualizar los datos:", err.message);
+            return res.status(500).send("Error al actualizar los datos.");
+    }
 }
