@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS Permisos (
 CREATE TABLE IF NOT EXISTS DocumentosExp_usuario(
     usuario_id INTEGER NOT NULL,
     DocumentosExp_id INTEGER NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (documentosExp_id) REFERENCES DocumentosExp(id) ON DELETE CASCADE
  );
 
