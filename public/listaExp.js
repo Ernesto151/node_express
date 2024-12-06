@@ -46,7 +46,6 @@ function abrirFormularioEdicionExp(expediente) {
                 <label for="participantes">Participantes:</label>
                 <textarea name="participantes">${expediente.participantes}</textarea>
                 <label for="objetivoExp">Objetivo: Revisar expedientes de <input type="text" name="objetivo" value="${expediente.objetivo}"/> año.</label>
-                <h3 class="ici-cd">ICI CD</h3>
                 <h3 class="asp-señalados">Aspectos señalados:</h3>
                 <label for="general"><b>I. General:</b></label>
                 <textarea name="sen_general">${expediente.sen_general}</textarea>

@@ -21,7 +21,7 @@ router.put("/expedientes/:id", editarExp);
 
 //notificaciones
 router.get('/principal', async (req, res) => {
-    const query = `SELECT fecha, mensaje FROM Notificaciones ORDER BY fecha DESC`;
+    const query = `SELECT fecha, mensaje FROM Notificaciones ORDER BY fecha ASC`;
 
     try{
     const result = await pool.query(query, []);

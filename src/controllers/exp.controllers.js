@@ -100,7 +100,8 @@ export const listarExp= async (req, res)=>{
                    hoja_result, convalidaciones, ratif_matric, reingresos, alta_lic_mat, 
                    req_ingles, otra, indicaciones, observaciones, clasif_aspectos, val_cualit,
                    cumplimiento_plan, num_facultad, cifra_mat_ini, num_exp_revisados, num_infracciones, 
-                   num_senalamientos, num_observaciones FROM DocumentosExp`;
+                   num_senalamientos, num_observaciones FROM DocumentosExp
+                   ORDER BY fecha ASC`;
 
     if (userRole === 'usuario') {
         query = `

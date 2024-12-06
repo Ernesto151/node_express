@@ -64,7 +64,8 @@ export const listarAct = async (req, res) => {
     const userRole = req.session.rol;
         
     let query = `SELECT id, nombre, facultad, fecha, hora, etapa, objetivo, descripcion, problemas, inspector, cargo 
-                 FROM DocumentosActas`;
+                 FROM DocumentosActas
+                 ORDER BY fecha ASC`;
         
     if (userRole === 'usuario') {
                 // Consulta para usuarios con rol 'usuario', solo muestra los documentos con permiso

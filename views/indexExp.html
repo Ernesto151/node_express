@@ -33,7 +33,7 @@
         
                 <div class="cont-curso input-enc">
                     <label for="curso">Curso:</label>
-                    <input type="number" id="curso" name="curso">
+                    <input type="text" id="curso" name="curso">
                     <span id="error-curso" class="error-message"></span>
                 </div>
         
@@ -66,7 +66,6 @@
                     <span id="error-objetivoExp" class="error-message"></span>
                 </div>
         
-                <h3 class="ici-cd">ICI CD</h3>
                 <h3 class="asp-señalados">Aspectos señalados:</h3>
                 
                 <div class="cont-general inputExp">
@@ -155,7 +154,7 @@
         
                 <div class="cont-clasificacion-aspectos inputExp">
                     <label for="clasif_aspectos"><b>IV. Clasificación de los aspectos detectados(Fraudes, Violaciones, Infracciones, Señalamientos)</b></label>
-                    <input type="text" id="clasif_aspectos" name="clasif_aspectos"><br>
+                    <textarea type="text" id="clasif_aspectos" name="clasif_aspectos"></textarea>
                     <span id="error-clasif_aspectos" class="error-message"></span>
                 </div>
         
@@ -252,7 +251,7 @@
             textInputs.forEach(id => {
                 const input = document.getElementById(id);
                 const error = document.getElementById(`error-${id}`);
-                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,:;'"]+$/.test(input.value)) {
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,:;'"]*$/.test(input.value)) {
                     error.textContent = "Solo se admiten letras";
                     isValid = false;
                 } else {
@@ -260,7 +259,7 @@
                 }
             });
 
-            const numberInputs = [ 'curso','cif_mat_ini','exp_revisados','num_infracciones','num_señalamientos','num_observaciones']; 
+            const numberInputs = ['cif_mat_ini','exp_revisados','num_infracciones','num_señalamientos','num_observaciones']; 
             numberInputs.forEach(id => {
                 const input = document.getElementById(id);
                 const error = document.getElementById(`error-${id}`);
