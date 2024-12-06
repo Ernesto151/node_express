@@ -92,8 +92,10 @@ export const mostrarAct= async (req,res)=>{
     const {nombre}= req.params;
     const userRole = req.session.rol;
 
+    const searchTerm = `%${nombre}%`;
+
     try{
-        const { rows } = await pool.query("SELECT * FROM DocumentosActas WHERE nombre=$1",[nombre]);
+        const { rows } = await pool.query("SELECT * FROM DocumentosActas WHERE nombre LIKE $1",[searchTerm]);
         console.log("Datos obtenidos de la tabla DocumentosActas:", rows);
         res.status(200).json({ documentos: rows, rol: userRole });
     } catch (err) {
